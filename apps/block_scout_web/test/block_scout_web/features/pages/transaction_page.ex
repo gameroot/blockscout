@@ -18,8 +18,4 @@ defmodule BlockScoutWeb.TransactionPage do
   def visit_page(session, %Transaction{hash: transaction_hash}) do
     visit(session, "/en/transactions/#{transaction_hash}")
   end
-
-  def visit_page(session, transaction_hash = %Hash{}) do
-    visit(session, "/en/transactions/#{transaction_hash}")
-  end
 end
