@@ -15,12 +15,12 @@
           <li class="nav-item">
             <%= link(
                   gettext("Token Transfers"),
-                  class: "nav-link active",
-                  to: token_path(@conn, :show, @conn.assigns.locale, "1")
+                  class: "nav-link",
+                  to: token_path(@conn, :show, @conn.assigns.locale, @token.contract_address_hash)
                 ) %>
           </li>
 
-          <%= if smart_contract_with_read_only_functions?(@token) do %>
+          <%= if TokenView.smart_contract_with_read_only_functions?(@token) do %>
             <li class="nav-item">
               <%= link(
                   gettext("Read Contract"),
@@ -29,12 +29,12 @@
             </li>
           <% end %>
 
-          <li class="nav-item"i>
+          <li class="nav-item">
             <%= link(
                   gettext("Token Holders"),
-                  class: "nav-link",
+                  class: "nav-link active",
                   "data-test": "token_holders_tab",
-                  to: token_holder_path(@conn, :index, @conn.assigns.locale, @conn.params["id"])
+                  to: token_holder_path(@conn, :index, @conn.assigns.locale, @conn.params["token_id"])
                 ) %>
           </li>
         </ul>
@@ -46,31 +46,42 @@
             <div class="dropdown-menu">
               <%= link(
                     gettext("Token Transfers"),
-                    class: "nav-link active",
-                    to: token_path(@conn, :show, @conn.assigns.locale, "1")
+                    class: "nav-link",
+                    to: token_path(@conn, :show, @conn.assigns.locale, @token.contract_address_hash)
                   ) %>
-              <%= if smart_contract_with_read_only_functions?(@token) do %>
+              <%= if TokenView.smart_contract_with_read_only_functions?(@token) do %>
                   <%= link(
                       gettext("Read Contract"),
                       to: "#",
                       class: "nav-link")%>
               <% end %>
+            <%= link(
+                  gettext("Token Holders"),
+                  class: "nav-link active",
+                  to: token_holder_path(@conn, :index, @conn.assigns.locale, @conn.params["token_id"])
+                ) %>
             </div>
           </li>
         </ul>
       </div>
 
+      <!-- Token transfers -->
       <div class="card-body">
-        <h2 class="card-title"><%= gettext "Token Transfers" %></h2>
+        <h2 class="card-title"><%= gettext "Token Holders" %></h2>
 
-        <%= if Enum.any?(@transfers) do %>
-          <%= for transfer <- @transfers do %>
-            <%= render("_token_transfer.html", locale: @locale, token: @token, transfer: transfer) %>
+        <%= if Enum.any?(@token_balances) do %>
+          <%= for token_balance <- @token_balances do %>
+            <%= render(
+                  "_token_balances.html",
+                  locale: @locale,
+                  token: @token,
+                  token_balance: token_balance
+                ) %>
           <% end %>
         <% else %>
           <div class="tile tile-muted text-center">
             <span data-selector="empty-transactions-list">
-              <%= gettext "There are no transfers for this Token." %>
+              <%= gettext "There are no holders for this Token." %>
             </span>
           </div>
         <% end %>
@@ -79,7 +90,7 @@
           <%= link(
             gettext("Older"),
             class: "button button--secondary button--small float-right mt-4",
-            to: token_path(@conn, :show, @conn.assigns.locale, @token.contract_address_hash, @next_page_params)
+            to: token_holder_path(@conn, :index, @conn.assigns.locale, @token.contract_address_hash, @next_page_params)
           ) %>
         <% end %>
       </div>

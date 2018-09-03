@@ -1,0 +1,31 @@
+<div class="tile tile-type-token fade-in mb-10" data-test="token_holders">
+  <div class="row">
+    <div class="pl-5 col-md-2 d-flex flex-column align-items-left justify-content-start justify-content-lg-center">
+    </div>
+
+    <div class="col-md-7 col-lg-8 d-flex flex-column">
+      <span>
+        <%= render BlockScoutWeb.AddressView,
+          "_link.html",
+          address_hash: to_string(@token_balance.address_hash),
+          contract: BlockScoutWeb.AddressView.contract?(@token_balance.address),
+          locale: @locale
+        %>
+      </span>
+
+      <span>
+        <span class="text-dark">
+          <%= if @token.type == "ERC-20" do %>
+            <%= format_according_to_decimals(@token_balance.value, @token.decimals) %>
+          <% else %>
+            <% @token_balance.value %>
+          <% end %>
+        </span>
+
+        <%= if @token.total_supply > 0 do %>
+          (<%= total_supply_percentage(@token_balance.value, @token.total_supply) %>)
+        <% end %>
+      </span>
+    </div>
+  </div>
+</div>
