@@ -4,7 +4,7 @@
 
     <!-- Dropdown -->
     <div data-token-balance-dropdown
-         data-api_path=<%= address_token_balance_path(@conn, :index, :en, @address.hash) %>
+         data-api_path=<%= address_token_balance_path(@conn, :index, @address.hash) %>
          class="icon-links ml-3 mb-3"
          >
         <p data-loading class="mb-0" stytle="display: none">
